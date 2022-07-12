@@ -23,8 +23,6 @@ export class News extends Component {
             loading: false,
             page: 1
         }
-
-
     }
     async componentDidMount() {
         console.log("cdm")
@@ -41,19 +39,16 @@ export class News extends Component {
     }
     previousClickHandle = async () => {
         console.log("Previous click")
-
         let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=dc56f66e9bf44f1f91538b64c8b34c82&page=${this.state.page - 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(apiUrl)
         let parsedData = await data.json()
         console.log(parsedData)
-
         this.setState({
             page: this.state.page - 1,
             articles: parsedData.articles,
             loading: false
         })
-
     }
     nextClickHandle = async () => {
         console.log("Pnext click")
@@ -63,15 +58,12 @@ export class News extends Component {
             let data = await fetch(apiUrl)
             let parsedData = await data.json()
             console.log(parsedData)
-
             this.setState({
                 page: this.state.page + 1,
                 articles: parsedData.articles,
                 loading: false
             })
         }
-
-
     }
     render() {
         return (
