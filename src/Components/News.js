@@ -17,6 +17,7 @@ export class News extends Component {
         pageSize: PropTypes.number,
         category: PropTypes.string
     }
+    
 
     constructor() {
         super();
