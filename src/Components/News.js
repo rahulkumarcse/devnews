@@ -29,7 +29,6 @@ export class News extends Component {
         }
     }
     async componentDidMount() {
-        console.log("cdm")
         let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKeey}&page=${this.state.page}&category=${this.props.category}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         this.props.setProgress(30)
