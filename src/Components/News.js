@@ -9,7 +9,8 @@ export class News extends Component {
     static defaultProps = {
         country: 'in',
         pageSize: 6,
-        category: "general"
+        category: "general",
+        apiKeey : "dc56f66e9bf44f1f91538b64c8b34c82"
     }
     static propTypes = {
         country: PropTypes.string,
@@ -29,20 +30,23 @@ export class News extends Component {
     }
     async componentDidMount() {
         console.log("cdm")
-        let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=dc56f66e9bf44f1f91538b64c8b34c82&page=${this.state.page}&category=${this.props.category}&pageSize=${this.props.pageSize}`
+        let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKeey}&page=${this.state.page}&category=${this.props.category}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
+        this.props.setProgress(30)
         let data = await fetch(apiUrl)
         let parsedData = await data.json()
+        this.props.setProgress(70)
         console.log(parsedData)
         this.setState({
             articles: parsedData.articles,
             totalResults: parsedData.totalResults,
             loading: false
         })
+        this.props.setProgress(100)
     }
     previousClickHandle = async () => {
         console.log("Previous click")
-        let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=dc56f66e9bf44f1f91538b64c8b34c82&page=${this.state.page - 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
+        let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKeey}&page=${this.state.page - 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(apiUrl)
         let parsedData = await data.json()
@@ -56,7 +60,7 @@ export class News extends Component {
     nextClickHandle = async () => {
         console.log("Pnext click")
         if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize))) {
-            let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=dc56f66e9bf44f1f91538b64c8b34c82&page=${this.state.page + 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
+            let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKeey}&page=${this.state.page + 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
             this.setState({ loading: true })
             let data = await fetch(apiUrl)
             let parsedData = await data.json()
@@ -71,17 +75,22 @@ export class News extends Component {
 
     fetchMoreData = async () => {
       this.setState({page : this.state.page +1})
-      let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=dc56f66e9bf44f1f91538b64c8b34c82&page=${this.state.page + 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
+      let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=${this.props.apiKeey}&page=${this.state.page + 1}&category=${this.props.category}&pageSize=${this.props.pageSize}`
             this.setState({ loading: true })
+            this.props.setProgress(30)
             let data = await fetch(apiUrl)
+            
             let parsedData = await data.json()
+            
             console.log(parsedData)
+            
+            this.props.setProgress(70)
             this.setState({
                totalResults : parsedData.totalResults,
                 articles: this.state.articles.concat(parsedData.articles),
                 loading: false
             })
-      
+            this.props.setProgress(100)
       }
 
     render() {
@@ -92,7 +101,7 @@ export class News extends Component {
                 <InfiniteScroll
                     dataLength={this.state.articles.length}
                     next={this.fetchMoreData}
-                    hasMore={this.state.articles.length!=this.state.totalResults}
+                    hasMore={this.state.articles.length!==this.state.totalResults}
                     loader={<Spinner/>}
                 >
                     <div className='container'>
